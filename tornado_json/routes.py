@@ -4,6 +4,11 @@ import inspect
 from itertools import chain
 from functools import reduce
 
+try:
+    from inspect import getfullargspec as get_args
+except ImportError:
+    from inspect import getargspec as get_args
+
 from tornado_json.constants import HTTP_METHODS
 from tornado_json.utils import extract_method, is_method, is_handler_subclass
 
@@ -93,7 +98,7 @@ def get_module_routes(module_name, custom_routes=None, exclusions=None,
         # If using tornado_json.gen.coroutine, original args are annotated...
         argspec_args = getattr(method, "__argspec_args",
                                # otherwise just grab them from the method
-                               inspect.getargspec(method).args)
+                               get_args(method).args)
 
         return [a for a in argspec_args if a not in ["self"]]
 

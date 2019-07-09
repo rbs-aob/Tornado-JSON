@@ -1,4 +1,7 @@
-import inspect
+try:
+    from inspect import getfullargspec as get_args
+except ImportError:
+    from inspect import getargspec as get_args
 
 from tornado import gen
 
@@ -15,5 +18,5 @@ def coroutine(func, replace_callback=True):
         wrapper = gen.coroutine(func)
     else:
         wrapper = gen.coroutine(func, replace_callback)
-    wrapper.__argspec_args = inspect.getargspec(func).args
+    wrapper.__argspec_args = get_args(func).args
     return wrapper
